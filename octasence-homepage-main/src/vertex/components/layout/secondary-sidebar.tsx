@@ -1,0 +1,242 @@
+'use client';
+
+import React from 'react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
+import {
+  AqHomeSmile,
+  AqMonitor,
+  AqMarkerPin01,
+  AqPackagePlus,
+  AqCollocation,
+  AqBezierCurve02,
+} from '@airqo/icons-react';
+import { Button } from '@/components/ui/button';
+import { useUserContext } from '@/core/hooks/useUserContext';
+import { ROUTE_LINKS } from '@/core/routes';
+import Card from '../shared/card/CardWrapper';
+import { NavItem } from './NavItem';
+
+interface SecondarySidebarProps {
+  isCollapsed: boolean;
+  toggleSidebar: () => void;
+  activeModule: string;
+}
+
+const styles = {
+  scrollbar: 'scrollbar-thumb-gray-300 scrollbar-track-gray-100',
+};
+
+const SidebarSectionHeading = ({
+  children,
+  isCollapsed,
+}: {
+  children: React.ReactNode;
+  isCollapsed: boolean;
+}) =>
+  !isCollapsed ? (
+    <div className="mt-6 mb-2 px-2 text-xs font-semibold text-muted-foreground capitalize tracking-wider">
+      {children}
+    </div>
+  ) : null;
+
+const SecondarySidebar: React.FC<SecondarySidebarProps> = ({
+  isCollapsed,
+  toggleSidebar,
+  activeModule,
+}) => {
+  const { getContextPermissions, isExternalOrg } =
+    useUserContext();
+  const contextPermissions = getContextPermissions();
+
+  return (
+    <aside
+      data-vertex-secondary-sidebar
+      className="hidden lg:block fixed left-0 top-[calc(55px+var(--vertex-ui-top-offset))] z-50 text-sidebar-text transition-all duration-300 ease-in-out p-1"
+    >
+      <div
+        data-vertex-secondary-sidebar-container
+        className={`transition-all duration-300 ease-in-out relative z-50 p-1
+          ${isCollapsed ? 'w-[75px]' : 'w-[256px]'} h-[calc(100vh-55px-var(--vertex-ui-top-offset))]`}
+      >
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleSidebar}
+          className={`absolute flex rounded-full top-4 -right-[6px] z-50 shadow-lg justify-center items-center border w-6 h-6 bg-white dark:bg-zinc-950 border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 hover:shadow-xl transition-all duration-200`}
+        >
+          {isCollapsed ? (
+            <ChevronRight className="h-4 w-4 text-gray-700 dark:text-gray-200" />
+          ) : (
+            <ChevronLeft className="h-4 w-4 text-gray-700 dark:text-gray-200" />
+          )}
+        </Button>
+        <Card
+          className="h-full relative overflow-hidden"
+          padding={isCollapsed ? 'p-2' : 'p-3'}
+          overflow
+          overflowType="auto"
+          contentClassName={`flex flex-col h-full overflow-x-hidden scrollbar-thin ${styles.scrollbar}`}
+        >
+          {/* Device Management Module - Personal devices for all users */}
+          {activeModule === 'devices' && (
+            <>
+              {!isExternalOrg ? (
+                /* Personal Scope View (Default) */
+                <>
+                  <NavItem
+                    item={{
+                      href: ROUTE_LINKS.HOME,
+                      icon: AqHomeSmile,
+                      label: 'Home',
+                      disabled: false,
+                    }}
+                    isCollapsed={isCollapsed}
+                  />
+                  <SidebarSectionHeading isCollapsed={isCollapsed}>
+                    Personal assets
+                  </SidebarSectionHeading>
+                  <NavItem
+                    item={{
+                      href: ROUTE_LINKS.MY_DEVICES,
+                      icon: AqMonitor,
+                      label: 'My Devices',
+                      disabled: false,
+                    }}
+                    isCollapsed={isCollapsed}
+                  />
+                  <NavItem
+                    item={{
+                      href: ROUTE_LINKS.ORG_REGISTER_DEVICE,
+                      icon: AqPackagePlus,
+                      label: 'Claim Device',
+                    }}
+                    isCollapsed={isCollapsed}
+                  />
+                  <SidebarSectionHeading isCollapsed={isCollapsed}>
+                    Data Access & Visibility
+                  </SidebarSectionHeading>
+                  <NavItem
+                    item={{
+                      href: ROUTE_LINKS.DEVICE_COHORTS,
+                      icon: AqCollocation,
+                      label: 'Cohorts',
+                      disabled: !contextPermissions.canViewDevices,
+                    }}
+                    isCollapsed={isCollapsed}
+                  />
+                </>
+              ) : (
+                /* Organization Scope View (External & Internal) */
+                <>
+                  <NavItem
+                    item={{
+                      href: ROUTE_LINKS.HOME,
+                      icon: AqHomeSmile,
+                      label: 'Overview',
+                      disabled: false,
+                    }}
+                    isCollapsed={isCollapsed}
+                  />
+                  <SidebarSectionHeading isCollapsed={isCollapsed}>
+                    Organization Assets
+                  </SidebarSectionHeading>
+                  <NavItem
+                    item={{
+                      href: ROUTE_LINKS.ORG_ASSETS,
+                      icon: AqMonitor,
+                      label: 'Assets',
+                      disabled: !contextPermissions.canViewDevices,
+                    }}
+                    isCollapsed={isCollapsed}
+                  />
+                  <NavItem
+                    item={{
+                      href: ROUTE_LINKS.ORG_REGISTER_DEVICE,
+                      icon: AqPackagePlus,
+                      label: 'Claim Device',
+                    }}
+                    isCollapsed={isCollapsed}
+                  />
+                  <SidebarSectionHeading isCollapsed={isCollapsed}>
+                    Data Access & Visibility
+                  </SidebarSectionHeading>
+                  <NavItem
+                    item={{
+                      href: ROUTE_LINKS.DEVICE_COHORTS,
+                      icon: AqCollocation,
+                      label: 'Cohorts',
+                      disabled: !contextPermissions.canViewDevices,
+                    }}
+                    isCollapsed={isCollapsed}
+                  />
+                </>
+              )}
+            </>
+          )}
+
+          {/* Platform Admin Module - Consolidated Administrative Panel */}
+          {activeModule === 'admin' && (
+            <>
+              <SidebarSectionHeading isCollapsed={isCollapsed}>
+                Administrative Panel
+              </SidebarSectionHeading>
+
+              {/* Network Management Dropdown */}
+              {/* Network Management - Flat Item */}
+              <NavItem
+                item={{
+                  href: ROUTE_LINKS.ADMIN_NETWORKS,
+                  icon: AqHomeSmile,
+                  label: 'Sensor Manufacturers',
+                  disabled: !contextPermissions.canViewNetworks,
+                }}
+                isCollapsed={isCollapsed}
+              />
+
+              <NavItem
+                item={{
+                  href: ROUTE_LINKS.COHORTS,
+                  icon: AqCollocation,
+                  label: 'Cohorts',
+                  disabled: !contextPermissions.canViewDevices,
+                }}
+                isCollapsed={isCollapsed}
+              />
+
+              <NavItem
+                item={{
+                  href: ROUTE_LINKS.SITES,
+                  icon: AqMarkerPin01,
+                  label: 'Sites',
+                  disabled: !contextPermissions.canViewSites,
+                }}
+                isCollapsed={isCollapsed}
+              />
+
+              <NavItem
+                item={{
+                  href: ROUTE_LINKS.GRIDS,
+                  icon: AqBezierCurve02,
+                  label: 'Grids',
+                  disabled: !contextPermissions.canViewSites,
+                }}
+                isCollapsed={isCollapsed}
+              />
+
+              <NavItem
+                item={{
+                  href: ROUTE_LINKS.ADMIN_SHIPPING,
+                  icon: AqPackagePlus,
+                  label: 'Shipping',
+                }}
+                isCollapsed={isCollapsed}
+              />
+            </>
+          )}
+        </Card>
+      </div>
+    </aside >
+  );
+};
+
+export default SecondarySidebar;
