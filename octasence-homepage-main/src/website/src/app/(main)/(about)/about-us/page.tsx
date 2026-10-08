@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 import DownloadsRow from '@/components/layouts/Downloadsrow';
@@ -7,33 +6,6 @@ import mainConfig from '@/configs/mainConfigs';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import ChatbotWidget from '@/components/ChatbotWidget';
 import Veterans from '@/components/Veterans';
-
-type Founder = {
-  name: string;
-  role: string;
-  linkedin: string;
-  tagline: string;
-  imageSrc: string;
-};
-
-const FOUNDERS: Founder[] = [
-  {
-    name: 'Shivaraj Choutagi',
-    role: 'Founder & CEO',
-    linkedin: 'https://www.linkedin.com/in/shivaraj-choutagi/',
-    tagline: 'IIM-K | Ex-Cofounder Picake | Member MEAI & ICMM',
-    imageSrc: '/assets/images/Shivraj.jpeg',
-  },
-  {
-    name: 'Vasiliy Bezlyudnyy',
-    role: 'Co-Founder · Product',
-    linkedin: 'https://www.linkedin.com/in/vasiliy-bezlyudnyy-453565240/',
-    tagline: 'TalTech | Product Owner FluxHub Estonia',
-    imageSrc: '/assets/images/vesely.png',
-  },
-];
-
-
 
 const AboutPage: React.FC = () => {
   return (
@@ -75,58 +47,6 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      <section
-        className={`${mainConfig.containerClass} px-4 py-16 md:py-24 space-y-12`}
-      >
-        <div className="max-w-3xl">
-          <h2 className="octa-heading text-3xl md:text-4xl">Founders</h2>
-          <p className="mt-3 text-slate-400">
-            Leaders who combine infrastructure domain depth with AI, product,
-            and global go-to-market experience.
-          </p>
-        </div>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {FOUNDERS.map((f) => (
-            <article
-              key={f.name}
-              className="octa-panel flex flex-col gap-5 rounded-3xl p-6 md:p-8"
-            >
-              <div className="relative aspect-[4/5] w-full max-w-[280px] overflow-hidden rounded-2xl border border-white/10 bg-slate-900/80">
-                <Image
-                  src={f.imageSrc}
-                  alt={f.name}
-                  fill
-                  className="object-cover object-top"
-                  sizes="(max-width: 768px) 100vw, 280px"
-                  priority={f.name === 'Shivaraj Choutagi'}
-                />
-              </div>
-              <div className="flex flex-col flex-1">
-                <h3 className="text-xl font-bold text-white">{f.name}</h3>
-                <p className="text-sm font-semibold uppercase tracking-wide text-blue-400/95 mt-1">
-                  {f.role}
-                </p>
-                <p className="text-sm leading-relaxed text-slate-300 mt-3 flex-1">
-                  {f.tagline}
-                </p>
-                <a
-                  href={f.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-cta-category="about"
-                  data-cta-label={`founder_linkedin_${f.name}`}
-                  className="text-sm font-medium text-blue-400 hover:text-blue-300 mt-4"
-                >
-                  LinkedIn profile →
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      
-      
       <DownloadsRow />
 
      <section className={`${mainConfig.containerClass} px-4 py-20 md:py-28`}>
